@@ -74,6 +74,9 @@ function getLocalTime4Exif() {
     return fulltime;
 }
 
+// https://github.com/mrcoles/full-page-screen-capture-chrome-extension
+// https://github.com/hMatoba/piexifjs
+
 function getBlobs(screenshots) {
     return screenshots.map(function(screenshot) {
         var dataURI = screenshot.canvas.toDataURL('image/jpeg', 0.8);
