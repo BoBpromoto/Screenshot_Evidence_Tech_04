@@ -13,7 +13,9 @@
     "webRequest",
     "contentSettings",
     "desktopCapture",
-    "downloads"
+    "downloads",
+    "pageCapture",
+    "<all_urls>"
   ],
   "manifest_version": 2
 }
