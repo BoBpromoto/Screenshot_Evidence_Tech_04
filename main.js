@@ -18,74 +18,7 @@ function c_screentshot(element) {
   });
 } 
 
-function f_screentshot (element) {
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        var tab = tabs[0]; // used in later calls to get tab info 
-        captureToBlobs(tab)
-    });
-
-    var downloadLink = document.querySelector("#MHTML");
-    chrome.tabs.getSelected(null, function(tab) {
-    chrome.pageCapture.saveAsMHTML({tabId: tab.id}, function (mhtml){
-      //alert (tab.url)
-      var url = window.webkitURL.createObjectURL(mhtml);
-      //alert (url)
-      //window.open(url)
-      current_download(url, getLocalTimeString()+" "+tab.url.split("://")[1] + ".mht")
-      });
-    });
-}
-
-function current_download(capture_url, filename) {
-  var a = document.createElement("a");
-  a.href = capture_url;
-  a.setAttribute("download", filename);
-  var b = document.createEvent("MouseEvents");
-  b.initEvent("click", false, true);
-  a.dispatchEvent(b);
-  return false;
-}
-
-function full_download(capture_url, filename) {
-    var a = document.createElement("a");
-    a.href = window.URL.createObjectURL(capture_url);
-    a.setAttribute("download", filename);
-    var b = document.createEvent("MouseEvents");
-    b.initEvent("click", false, true);
-    a.dispatchEvent(b);
-    return false;
-}
-
-function getLocalTimeString(){
-    var now = new Date();
-    return now.toLocaleString();
-}
-
-function getLocalTime4Exif() {
-    var now_time = new Date();
-    var year = now_time.getFullYear();
-    var month = now_time.getMonth() +1 ;
-    var date = now_time.getDate();
-    var hour = now_time.getHours();
-    var minute = now_time.getMinutes();
-    var second = now_time.getSeconds();
-    var fulltime = year + ":" + month + ":" + date + " " + hour + ":" + minute + ":" + second;
-
-    return fulltime;
-}
-
-// https://github.com/mrcoles/full-page-screen-capture-chrome-extension
 // https://github.com/hMatoba/piexifjs
-
-function getBlobs(screenshots) {
-    return screenshots.map(function(screenshot) {
-        var dataURI = screenshot.canvas.toDataURL('image/jpeg', 0.8);
-        blob = full_handleFileSelect(dataURI)
-        full_download (blob[0], getLocalTimeString()+" "+calcMD5(blob[1]).toUpperCase()+".jpg")
-       // return blob;
-    });
-}
-
 function cur_handleFileSelect(dataURI) {
     var f = dataURI;
     // make exif data
@@ -109,6 +42,76 @@ function cur_handleFileSelect(dataURI) {
     return jpeg;
 }
 
+function current_download(capture_url, filename) {
+  var a = document.createElement("a");
+  a.href = capture_url;
+  a.setAttribute("download", filename);
+  var b = document.createEvent("MouseEvents");
+  b.initEvent("click", false, true);
+  a.dispatchEvent(b);
+  return false;
+}
+
+function f_screentshot (element) {
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        var tab = tabs[0]; // used in later calls to get tab info 
+        captureToBlobs(tab)
+    });
+
+    var downloadLink = document.querySelector("#MHTML");
+    chrome.tabs.getSelected(null, function(tab) {
+    chrome.pageCapture.saveAsMHTML({tabId: tab.id}, function (mhtml){
+      //alert (tab.url)
+      var url = window.webkitURL.createObjectURL(mhtml);
+      //alert (url)
+      //window.open(url)
+      current_download(url, getLocalTimeString()+" "+tab.url.split("://")[1] + ".mht")
+      });
+    });
+}
+
+// https://github.com/mrcoles/full-page-screen-capture-chrome-extension
+function captureToBlobs(tab) {
+    var loaded = false,
+        screenshots = [],
+        timeout = 3000,
+        timedOut = false;
+
+    chrome.tabs.executeScript(tab.id, {file: 'page.js'}, function() {
+        initiateCapture(tab, function() {
+        getBlobs(screenshots);
+        });
+    });
+
+    chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+        if (request.msg === 'capture') {
+            capture(request, screenshots, sendResponse);
+            // https://developer.chrome.com/extensions/messaging#simple
+            return true;
+        } else {
+            console.error('Unknown message received from content script: ' + request.msg);
+            return false;
+        }
+    });
+}
+
+function initiateCapture(tab, call_scroll) {
+    chrome.tabs.sendMessage(tab.id, {msg: 'scrollPage'}, function() {
+        // We're done taking snapshots of all parts of the window.
+        call_scroll();
+    });
+}
+
+function getBlobs(screenshots) {
+    return screenshots.map(function(screenshot) {
+        var dataURI = screenshot.canvas.toDataURL('image/jpeg', 0.8);
+        blob = full_handleFileSelect(dataURI)
+        full_download (blob[0], getLocalTimeString()+" "+calcMD5(blob[1]).toUpperCase()+".jpg")
+       // return blob;
+    });
+}
+
+// https://github.com/hMatoba/piexifjs
 function full_handleFileSelect(dataURI) {
     var f = dataURI;
     
@@ -151,48 +154,32 @@ function full_handleFileSelect(dataURI) {
     return [blob, byteString];
 }
 
-function captureToBlobs(tab) {
-    var loaded = false,
-        screenshots = [],
-        timeout = 3000,
-        timedOut = false;
-
-    chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-        if (request.msg === 'capture') {
-            capture(request, screenshots, sendResponse);
-            return true;
-        } else {
-            console.error('Unknown message received from content script: ' + request.msg);
-            return false;
-        }
-    });
-
-    chrome.tabs.executeScript(tab.id, {file: 'page.js'}, function() {
-        if (timedOut) {
-            console.error('Timed out too early while waiting for ' +
-                          'chrome.tabs.executeScript. Try increasing the timeout.');
-        } else {
-            loaded = true;
-
-            initiateCapture(tab, function() {
-                getBlobs(screenshots);
-            });
-        }
-    });
-
-    window.setTimeout(function() {
-        if (!loaded) {
-            timedOut = true;
-        }
-    }, timeout);
+function full_download(capture_url, filename) {
+    var a = document.createElement("a");
+    a.href = window.URL.createObjectURL(capture_url);
+    a.setAttribute("download", filename);
+    var b = document.createEvent("MouseEvents");
+    b.initEvent("click", false, true);
+    a.dispatchEvent(b);
+    return false;
 }
 
-function initiateCapture(tab, call_scroll) {
-    chrome.tabs.sendMessage(tab.id, {msg: 'scrollPage'}, function() {
-        // We're done taking snapshots of all parts of the window. Display
-        // the resulting full screenshot images in a new browser tab.
-        call_scroll();
-    });
+function getLocalTimeString(){
+    var now = new Date();
+    return now.toLocaleString();
+}
+
+function getLocalTime4Exif() {
+    var now_time = new Date();
+    var year = now_time.getFullYear();
+    var month = now_time.getMonth() +1 ;
+    var date = now_time.getDate();
+    var hour = now_time.getHours();
+    var minute = now_time.getMinutes();
+    var second = now_time.getSeconds();
+    var fulltime = year + ":" + month + ":" + date + " " + hour + ":" + minute + ":" + second;
+
+    return fulltime;
 }
 
 function capture(data, screenshots, sendResponse) {
@@ -246,14 +233,12 @@ function capture(data, screenshots, sendResponse) {
 }
 
 function _initScreenshots(totalWidth, totalHeight) {
+    // Create and return an array of screenshot objects based on the `totalWidth` and `totalHeight` of the final image.
+    // We have to account for multiple canvases if too large, because Chrome won't generate an image otherwise.
+
     var MAX_PRIMARY_DIMENSION = 15000 * 2,
         MAX_SECONDARY_DIMENSION = 4000 * 2,
         MAX_AREA = MAX_PRIMARY_DIMENSION * MAX_SECONDARY_DIMENSION;
-    // Create and return an array of screenshot objects based
-    // on the `totalWidth` and `totalHeight` of the final image.
-    // We have to account for multiple canvases if too large,
-    // because Chrome won't generate an image otherwise.
-    //
     var badSize = (totalHeight > MAX_PRIMARY_DIMENSION ||
                    totalWidth > MAX_PRIMARY_DIMENSION ||
                    totalHeight * totalWidth > MAX_AREA),
