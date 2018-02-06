@@ -157,11 +157,6 @@ function captureToBlobs(tab) {
     chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         if (request.msg === 'capture') {
             capture(request, screenshots, sendResponse);
-            // https://developer.chrome.com/extensions/messaging#simple
-            //
-            // If you want to asynchronously use sendResponse, add return true;
-            // to the onMessage event handler.
-            //
             return true;
         } else {
             console.error('Unknown message received from content script: ' + request.msg);
@@ -300,9 +295,7 @@ function _initScreenshots(totalWidth, totalHeight) {
 }
 
 function _filterScreenshots(imgLeft, imgTop, imgWidth, imgHeight, screenshots) {
-    // Filter down the screenshots to ones that match the location
-    // of the given image.
-    //
+    // Filter down the screenshots to ones that match the location of the given image.
     var imgRight = imgLeft + imgWidth,
         imgBottom = imgTop + imgHeight;
     return screenshots.filter(function(screenshot) {
