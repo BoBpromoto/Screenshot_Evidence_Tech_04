@@ -53,7 +53,7 @@ function DeleteTable() {
 }
 
 function popupDB() {
-    var popUrl = "test.html";//팝업창에 출력될 페이지 URL
+    var popUrl = "print_DB.html";//팝업창에 출력될 페이지 URL
     var popOption = "width=900, height=500, resizable=no, scrollbars=no, status=no;";//팝업창 옵션(optoin)
     window.open(popUrl,"Print Web SQL Database",popOption);
 }
