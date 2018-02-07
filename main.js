@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
   // document.querySelector('button[id_2]').addEventListener('click', loadDB);
   document.querySelector('button[id_3]').addEventListener('click', createOrloadTable);
   document.querySelector('button[id_4]').addEventListener('click', DeleteTable);
-  document.querySelector('button[id_5]').addEventListener('click', popupDB);
+  document.querySelector('button[id_5]').addEventListener('click', showDB);
 });
 
 var db;
@@ -31,7 +31,6 @@ function createOrloadTable(element) {
 
 function InsertData(data) {
     db.transaction(function(tx){ 
-        alert (t_name.value)
         capture_time = data.split(" ")[0] +" "+data.split(" ")[1] +" "+ data.split(" ")[2]
         +" "+ data.split(" ")[3] + " "+ data.split(" ")[4];
         hash_value = data.split(" ")[5].split(".")[0]
@@ -53,11 +52,29 @@ function DeleteTable() {
 }
 
 function popupDB() {
-    var popUrl = "print_DB.html";//팝업창에 출력될 페이지 URL
-    var popOption = "width=900, height=500, resizable=no, scrollbars=no, status=no;";//팝업창 옵션(optoin)
-    window.open(popUrl,"Print Web SQL Database",popOption);
 }
 
+function showDB(element) {
+    if (!db) {
+        alert ("Plz, Set DB & Table First")
+    }
+    else {
+        db.transaction(function(tx){
+            showquery = "SELECT * from " + t_name.value;
+            tx.executeSql(showquery,[], function(tx,result){
+                document.getElementById('print_window').innerHTML = ""
+                for(var i = 0; i < result.rows.length; i++){
+                    var row = result.rows.item(i);
+                    document.getElementById('print_window').innerHTML +=  i+1 + "번\nTime : " + row['Time'] + "\nFilename : "
+                     + row['File_Name'] + "\nHash(MD5) : " + row["Hash"] + "\n\n";   
+                }
+            });
+        });
+        var popUrl = "print_DB.html";//팝업창에 출력될 페이지 URL
+        var popOption = "width=843, height=188, resizable=no, scrollbars=no, status=no;";//팝업창 옵션(optoin)
+        window.open(popUrl,"Print Web SQL Database",popOption);
+    }
+} 
 function c_screentshot(element) {
     if(!!window.openDatabase) {
      alert("현재 브라우저는 Web SQL Database를 지원합니다")
