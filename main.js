@@ -1,32 +1,83 @@
 document.addEventListener('DOMContentLoaded', function () {
   document.querySelector('button[target]').addEventListener('click', c_screentshot);
-  document.querySelector('button[id]').addEventListener('click', f_screentshot);
+  document.querySelector('button[id_0]').addEventListener('click', f_screentshot);
+  document.querySelector('button[id_1]').addEventListener('click', createDB);
+  document.querySelector('button[id_2]').addEventListener('click', createTable);
+  document.querySelector('button[id_3]').addEventListener('click', DeleteTable);
+  document.querySelector('button[id_4]').addEventListener('click', ShowDB);
+});
+
+var db;
+
+function createDB(element) {
+    if (window.openDatabase) { 
+    db = window.openDatabase("Evidence","1.0", "Capture_Screen", 1024*1024);
+    }
+}
+
+function createTable(element) {
+    db.transaction(function(tx){
+        tx.executeSql("CREATE TABLE evidence_list(Time,File_Name,Hash)");
+        alert(db)
     });
+}
+
+function InsertData(data) {
+    db.transaction(function(tx){ 
+        capture_time = data.split(" ")[0] +" "+data.split(" ")[1] +" "+ data.split(" ")[2]
+        +" "+ data.split(" ")[3] + " "+ data.split(" ")[4];
+        alert (capture_time)
+        hash_value = data.split(" ")[5].split(".")[0]
+        alert (hash_value)
+        tx.executeSql("insert into evidence_list(Time,File_Name,Hash) values(?,?,?)",[capture_time, data, hash_value]);
+    });
+}
+
+function DeleteTable() {
+    alert(db)
+    db.transaction(function(tx){ 
+        tx.executeSql("drop table evidence_list");
+    });
+}
+
+function ShowDB(element) {
+    alert(showDB.value);
+    // db.transaction(function(tx){ 
+    //     alert(showDB.value)
+    //     tx.executeSql(showDB.value);
+    // });
+}
 
 function c_screentshot(element) {
-  var downloadLink = document.querySelector("#MHTML");
-  chrome.tabs.getSelected(null, function(tab) {
-    chrome.pageCapture.saveAsMHTML({tabId: tab.id}, function (mhtml){
-      var url = window.webkitURL.createObjectURL(mhtml);
-      current_download(url, getLocalTimeString()+" "+tab.url.split("://")[1] + ".mht")
-      });
+    if(!!window.openDatabase) {
+     alert("현재 브라우저는 Web SQL Database를 지원합니다")
+    }
+    else{
+      alert("현재 브라우저는 Web SQL Database를 지원하지 않습니다")
+    }
+    var downloadLink = document.querySelector("#MHTML");
+    chrome.tabs.getSelected(null, function(tab) {
+        chrome.pageCapture.saveAsMHTML({tabId: tab.id}, function (mhtml){
+            var url = window.URL.createObjectURL(mhtml);
+            current_download(url, getLocalTimeString()+" "+tab.url.split("://")[1] + ".mht")
+        });
     });
-  chrome.tabs.captureVisibleTab(function(screenshotUrl) {
-    //alert (screenshotUrl)
-    cur_exif = cur_handleFileSelect(screenshotUrl)
-    current_download(cur_exif, getLocalTimeString()+" "+calcMD5(atob(cur_exif.split(',')[1])).toUpperCase()+".jpg"); 
-  });
+
+    chrome.tabs.captureVisibleTab(function(screenshotUrl) {
+        //alert (screenshotUrl)
+        cur_exif = cur_handleFileSelect(screenshotUrl)
+        filename = getLocalTimeString()+" "+calcMD5(atob(cur_exif.split(',')[1])).toUpperCase()+".jpg"
+        current_download(cur_exif, filename); 
+        InsertData(filename);
+    });
 } 
 
-// https://github.com/hMatoba/piexifjs
 function cur_handleFileSelect(dataURI) {
     var f = dataURI;
     // make exif data
     var zerothIfd = {};
     var exifIfd = {};
     var gpsIfd = {};
-    zerothIfd[piexif.ImageIFD.Make] = "Maker Name";
-    zerothIfd[piexif.ImageIFD.Software] = "Piexifjs";
     //alert (getLocalTime4Exif());
     exifIfd[piexif.ExifIFD.DateTimeOriginal] = getLocalTime4Exif();
     var exifObj = {"0th":zerothIfd, "Exif":exifIfd, "GPS":gpsIfd};
@@ -53,6 +104,12 @@ function current_download(capture_url, filename) {
 }
 
 function f_screentshot (element) {
+    if(!!window.openDatabase) {
+     alert("현재 브라우저는 Web SQL Database를 지원합니다")
+    }
+    else{
+      alert("현재 브라우저는 Web SQL Database를 지원하지 않습니다")
+    }
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         var tab = tabs[0]; // used in later calls to get tab info 
         captureToBlobs(tab)
@@ -62,7 +119,7 @@ function f_screentshot (element) {
     chrome.tabs.getSelected(null, function(tab) {
     chrome.pageCapture.saveAsMHTML({tabId: tab.id}, function (mhtml){
       //alert (tab.url)
-      var url = window.webkitURL.createObjectURL(mhtml);
+      var url = window.URL.createObjectURL(mhtml);
       //alert (url)
       //window.open(url)
       current_download(url, getLocalTimeString()+" "+tab.url.split("://")[1] + ".mht")
@@ -340,19 +397,20 @@ function rol(num, cnt) {
 function cmn(q, a, b, x, s, t) {
   return add(rol(add(add(a, q), add(x, t)), s), b);
 }
+
 function ff(a, b, c, d, x, s, t) {
   return cmn((b & c) | ((~b) & d), a, b, x, s, t);
 }
-function gg(a, b, c, d, x, s, t)
-{
+
+function gg(a, b, c, d, x, s, t){
   return cmn((b & d) | (c & (~d)), a, b, x, s, t);
 }
-function hh(a, b, c, d, x, s, t)
-{
+
+function hh(a, b, c, d, x, s, t){
   return cmn(b ^ c ^ d, a, b, x, s, t);
 }
-function ii(a, b, c, d, x, s, t)
-{
+
+function ii(a, b, c, d, x, s, t){
   return cmn(c ^ (b | (~d)), a, b, x, s, t);
 }
 
