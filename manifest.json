@@ -15,7 +15,8 @@
     "desktopCapture",
     "downloads",
     "pageCapture",
-    "<all_urls>"
+    "<all_urls>",
+    "unlimitedStorage"
   ],
   "manifest_version": 2
 }
