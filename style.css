@@ -88,7 +88,7 @@ a {
 }
 .popup-box {
 	background: #fff;
-	width: 280px;
+	width: 320px;
 	color: #3c3c3c;
 	font-size: 13px;
 }
@@ -129,14 +129,14 @@ a {
 	font-weight: 700;
 	color: #191919;
 	margin: 0;
-	padding: 13px 0 0 50px;
+	padding: 13px 0 0 73px;
 }
 .window_header p {
 	font-size: 12px;
 	font-weight: 500;
 	color: #191919;
 	margin: 0;
-	padding: 3px 0 0 30px;
+	padding: 3px 0 0 50px;
 }
 .window_nav {
 	padding: 0;
@@ -152,14 +152,18 @@ a {
 }
 .window_nav ul li a {
 	display: block;
-	color: #409922;
+	/*color: #409922;*/
 	/*background: #2a84ff;*/
 	line-height: 34px;
 	text-decoration: none;
 	border-bottom: 1px #eee solid;
-	padding: 1px 12px;
-	font-size: 14px;
+	padding: 1px 19px;
+	font-size: 12px;
 	font-weight: 700;
+}
+.window_nav ul li p {
+	display: block;
+	font_size : 11px;
 }
 .window_nav ul li:last-child a {
 	border-bottom: none;
@@ -235,7 +239,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 	font-weight: 500;
 	color: #191919;
 	margin: 0 0 0 0;
-	padding: 0 0 0 30px;
+	padding: 0 0 0 70px;
 }
 
 .window_footer a p {
@@ -244,7 +248,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 	font-weight: 500;
 	color: #191919;
 	margin: 0;
-	padding: 0 0 0 200px;
+	padding: 0 0 0 240px;
 }
 
 #page-editor {
