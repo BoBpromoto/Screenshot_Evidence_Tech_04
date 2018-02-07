@@ -1,51 +1,61 @@
 document.addEventListener('DOMContentLoaded', function () {
   document.querySelector('button[target]').addEventListener('click', c_screentshot);
   document.querySelector('button[id_0]').addEventListener('click', f_screentshot);
-  document.querySelector('button[id_1]').addEventListener('click', createDB);
-  document.querySelector('button[id_2]').addEventListener('click', createTable);
-  document.querySelector('button[id_3]').addEventListener('click', DeleteTable);
-  document.querySelector('button[id_4]').addEventListener('click', ShowDB);
+  document.querySelector('button[id_1]').addEventListener('click', createORloadDB);
+  // document.querySelector('button[id_2]').addEventListener('click', loadDB);
+  document.querySelector('button[id_3]').addEventListener('click', createOrloadTable);
+  document.querySelector('button[id_4]').addEventListener('click', DeleteTable);
+  document.querySelector('button[id_5]').addEventListener('click', popupDB);
 });
 
 var db;
 
-function createDB(element) {
+function createORloadDB(element) {
     if (window.openDatabase) { 
-    db = window.openDatabase("Evidence","1.0", "Capture_Screen", 1024*1024);
+        DB_name = dbname.value;
+        db = window.openDatabase(DB_name, "1.0", "Capture_Screen", 1024*1024);
     }
 }
 
-function createTable(element) {
-    db.transaction(function(tx){
-        tx.executeSql("CREATE TABLE evidence_list(Time,File_Name,Hash)");
-        alert(db)
-    });
+function createOrloadTable(element) {
+    if (!db) {
+        alert ("Create Or Load DB First!");
+    }
+    else {
+        db.transaction(function(tx){
+            tablequery = "CREATE TABLE " + t_name.value + "(Time,File_Name,Hash)";
+            tx.executeSql(tablequery);
+        });
+    }
 }
 
 function InsertData(data) {
     db.transaction(function(tx){ 
+        alert (t_name.value)
         capture_time = data.split(" ")[0] +" "+data.split(" ")[1] +" "+ data.split(" ")[2]
         +" "+ data.split(" ")[3] + " "+ data.split(" ")[4];
-        alert (capture_time)
         hash_value = data.split(" ")[5].split(".")[0]
-        alert (hash_value)
-        tx.executeSql("insert into evidence_list(Time,File_Name,Hash) values(?,?,?)",[capture_time, data, hash_value]);
+        Inquery = "INSERT INTO " + t_name.value + "(Time,File_Name,Hash) values(?,?,?)"
+        tx.executeSql(Inquery,[capture_time, data, hash_value]);
     });
 }
 
 function DeleteTable() {
-    alert(db)
-    db.transaction(function(tx){ 
-        tx.executeSql("drop table evidence_list");
-    });
+    if (!db) {
+        alert ("Load DB First")
+    }
+    else {
+        db.transaction(function(tx){ 
+            delquery = "DROP table " + td_name.value;
+            tx.executeSql(delquery);
+        });
+    }
 }
 
-function ShowDB(element) {
-    alert(showDB.value);
-    // db.transaction(function(tx){ 
-    //     alert(showDB.value)
-    //     tx.executeSql(showDB.value);
-    // });
+function popupDB() {
+    var popUrl = "test.html";//팝업창에 출력될 페이지 URL
+    var popOption = "width=900, height=500, resizable=no, scrollbars=no, status=no;";//팝업창 옵션(optoin)
+    window.open(popUrl,"Print Web SQL Database",popOption);
 }
 
 function c_screentshot(element) {
