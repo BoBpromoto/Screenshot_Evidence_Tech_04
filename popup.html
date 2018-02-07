@@ -1,11 +1,9 @@
 <!DOCTYPE html>
-<html>
-<head lang="en">
+<html><head lang="en">
   <meta charset="UTF-8">
-  <title>Website Screenshot</title>
-  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet'
-        type='text/css'>
-  <link href="style.css" rel="stylesheet"/>
+  <title>BoB Digital Forensic 6th 3rd_Stage</title>
+  <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" type="text/css">
+  <link href="style.css" rel="stylesheet">
 </head>
 
 <body class="popup-box">
@@ -18,24 +16,51 @@
 <div class="window_nav">
   <ul>
     <li>
-      <a class="capture-visible">
-        <span class="icon icon1"></span> <button target = "current_shot")">Current Screen Capture</button>
+      <a class="About_DB">
+        <p> DB Name : <input type="text" id="dbname" value=" "></p>
+        <button id_1="DB_Create_Load">Create or Load DB</button>
       </a>
+  </li>
+<!--   <li>
+      <a class="About_DB">
+        <p> Load DB Name: <input type="text" id="cdbname" value=" "></p>
+        <button id_2="DB_Load">Load DB</button>
+      </a>
+  </li> -->
+  <li>
+      <a class="About_DB">
+        <p> Table Name : <input type="text" id="t_name" value=" "></p>
+        <button id_3="Table_Create_Load">Create or Load Table</button>
+      </a>
+  </li>
+  <li>
+    <a class ="About_DB">
+      <p> Del Table Name : <input type="text" id="td_name" value=" "></p>
+     <button id_4="Table_Del">Delete Table</button>
+   </a>
+  </li>
+  <li>
+    <a class ="About_DB">
+     <span> Please set DB, Table before show</span><button id_5="showDB">Show DB Data</button>
+   </a>
+  </li>
+    <li>
+      <a class="capture-visible">
+        <span class="icon icon1"></span> <a> <button target="current_shot">Current Screen Capture</button>
+      </a> </a>
     </li>
     <li>
       <a class="capture-all"> 
-        <span class="icon icon2"></span> <button id = "whole_page">Scroll Capture</button>
-      </a>
+        <span class="icon icon2"></span> <a> <button id_0="whole_page">Scroll Capture</button>
+      </a> </a>
     </li>
-  </ul>
+</ul>
 </div>
 <div class="window_message" id="noall" tr="noall"></div>
-</div>
+
 <div class="window_footer">  
     <span class="icon BoBlogo"></span>
   <a><p1>@Author : L3ad0xFF<p>(Moonwon LEE)</p></p1></a>
-    <br/>
+    <br>
   </div>
-</div>
-</body>
-</html>
+</body></html>
