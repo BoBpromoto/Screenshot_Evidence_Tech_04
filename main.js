@@ -173,7 +173,9 @@ function getBlobs(screenshots) {
     return screenshots.map(function(screenshot) {
         var dataURI = screenshot.canvas.toDataURL('image/jpeg', 0.8);
         blob = full_handleFileSelect(dataURI)
-        full_download (blob[0], getLocalTimeString()+" "+calcMD5(blob[1]).toUpperCase()+".jpg")
+        ffilename = getLocalTimeString()+" "+calcMD5(blob[1]).toUpperCase()+".jpg"
+        full_download (blob[0], ffilename)
+        InsertData(ffilename)
        // return blob;
     });
 }
