@@ -29,13 +29,13 @@ function createOrloadTable(element) {
     }
 }
 
-function InsertData(data) {
+function InsertData_capture(filename, hash) {
     db.transaction(function(tx){ 
-        capture_time = data.split(" ")[0] +" "+data.split(" ")[1] +" "+ data.split(" ")[2]
-        +" "+ data.split(" ")[3] + " "+ data.split(" ")[4];
-        hash_value = data.split(" ")[5].split(".")[0]
+        capture_time = filename.split(" ")[0] +" "+filename.split(" ")[1] +" "+ filename.split(" ")[2]
+        +" "+ filename.split(" ")[3] + " "+ filename.split(" ")[4];
+        hash_value = hash.split(" ")[5].split(".")[0]
         Inquery = "INSERT INTO " + t_name.value + "(Time,File_Name,Hash) values(?,?,?)"
-        tx.executeSql(Inquery,[capture_time, data, hash_value]);
+        tx.executeSql(Inquery,[capture_time, filename, hash_value]);
     });
 }
 
@@ -49,9 +49,6 @@ function DeleteTable() {
             tx.executeSql(delquery);
         });
     }
-}
-
-function popupDB() {
 }
 
 function showDB(element) {
@@ -82,20 +79,25 @@ function c_screentshot(element) {
     else{
       alert("현재 브라우저는 Web SQL Database를 지원하지 않습니다")
     }
-    var downloadLink = document.querySelector("#MHTML");
+   // var downloadLink = document.querySelector("#MHTML");
     chrome.tabs.getSelected(null, function(tab) {
         chrome.pageCapture.saveAsMHTML({tabId: tab.id}, function (mhtml){
             var url = window.URL.createObjectURL(mhtml);
-            current_download(url, getLocalTimeString()+" "+tab.url.split("://")[1] + ".mht")
+            src_name = getLocalTimeString()+" "+tab.url.split("://")[1] + ".mht"
+            current_download(url, src_name)
         });
     });
 
-    chrome.tabs.captureVisibleTab(function(screenshotUrl) {
-        //alert (screenshotUrl)
-        cur_exif = cur_handleFileSelect(screenshotUrl)
-        filename = getLocalTimeString()+" "+calcMD5(atob(cur_exif.split(',')[1])).toUpperCase()+".jpg"
-        current_download(cur_exif, filename); 
-        InsertData(filename);
+    chrome.tabs.getSelected(null, function(tab) {
+        chrome.tabs.captureVisibleTab(function(screenshotUrl) {
+            //alert (screenshotUrl)
+            target_url = tab.url
+            cur_exif = cur_handleFileSelect(screenshotUrl)
+            downname = getLocalTimeString() + " currnet_("+ target_url + ").jpg"
+            db_hash_filename = getLocalTimeString()+" "+calcMD5(atob(cur_exif.split(',')[1])).toUpperCase()+".jpg"
+            current_download(cur_exif, downname); 
+            InsertData_capture(downname, db_hash_filename);
+        });
     });
 } 
 
@@ -106,6 +108,7 @@ function cur_handleFileSelect(dataURI) {
     var exifIfd = {};
     var gpsIfd = {};
     //alert (getLocalTime4Exif());
+    zerothIfd[piexif.ImageIFD.Software] = "L3ad0xFF";
     exifIfd[piexif.ExifIFD.DateTimeOriginal] = getLocalTime4Exif();
     var exifObj = {"0th":zerothIfd, "Exif":exifIfd, "GPS":gpsIfd};
     // get exif binary as "string" type
@@ -163,7 +166,10 @@ function captureToBlobs(tab) {
 
     chrome.tabs.executeScript(tab.id, {file: 'page.js'}, function() {
         initiateCapture(tab, function() {
-        getBlobs(screenshots);
+            //getBlobs(screenshots)
+            full_target_url = tab.url
+            getBlobs(full_target_url, screenshots); //blob
+
         });
     });
 
@@ -186,14 +192,15 @@ function initiateCapture(tab, call_scroll) {
     });
 }
 
-function getBlobs(screenshots) {
+function getBlobs(full_url, screenshots) {
     return screenshots.map(function(screenshot) {
         var dataURI = screenshot.canvas.toDataURL('image/jpeg', 0.8);
         blob = full_handleFileSelect(dataURI)
-        ffilename = getLocalTimeString()+" "+calcMD5(blob[1]).toUpperCase()+".jpg"
-        full_download (blob[0], ffilename)
-        InsertData(ffilename)
-       // return blob;
+        full_downname = getLocalTimeString()+ " full_("+ full_target_url + ").jpg"
+        db_hash = getLocalTimeString()+" "+calcMD5(blob[1]).toUpperCase()+".jpg"
+        full_download (blob[0], full_downname)
+        InsertData_capture(full_downname, db_hash)
+        return blob;
     });
 }
 
@@ -205,8 +212,7 @@ function full_handleFileSelect(dataURI) {
     var zerothIfd = {};
     var exifIfd = {};
     var gpsIfd = {};
-    zerothIfd[piexif.ImageIFD.Make] = "Maker Name";
-    zerothIfd[piexif.ImageIFD.Software] = "Piexifjs";
+    zerothIfd[piexif.ImageIFD.Software] = "L3ad0xFF";
     exifIfd[piexif.ExifIFD.DateTimeOriginal] = getLocalTime4Exif();
     var exifObj = {"0th":zerothIfd, "Exif":exifIfd, "GPS":gpsIfd};
     // get exif binary as "string" type
