@@ -3,29 +3,29 @@
 		||							     ||
 		||	    Category : Tech 	      No. 04		     ||	
 		||							     ||
-		||		@Author : L3ad0xff (Lee Moonwon)	     ||
+		||		      @Author : L3ad0xff 	  	     ||
 		||							     ||
 		||	         Web Acqusition for Evidence		     ||
 		||	       Capture the Current & Full Screen	     ||
 		===============================================================
 
-  °³¹ßÈ¯°æ : Windows 10.Home, Chrome 64.0.3282.140 (°ø½Ä ºôµå) (64ºñÆ®) (cohort: 64_140_win)
+  ê°œë°œí™˜ê²½ : Windows 10.Home, Chrome 64.0.3282.140 (ê³µì‹ ë¹Œë“œ) (64ë¹„íŠ¸) (cohort: 64_140_win)
 	     SQLite Expert Personal 4 - 64bit
 
-======================================== ½ÇÇà¹æ¹ý ===============================================
+======================================== ì‹¤í–‰ë°©ë²• ===============================================
 
-  1. ´Ù¿î¹ÞÀº ¾ÐÃàÆÄÀÏÀ» ±×´ë·Î ÇÏ³ªÀÇ Æú´õ¿¡ ¾ÐÃà ÇØÁ¦
-	- main, page, piexif ÆÄÀÏÀ» main.js, page.js, piexif.js·Î È®ÀåÀÚ .js Ãß°¡ÇÏ¿© º¯°æ
-	- ¾ÐÃàÇØÁ¦ ÇÑ ÆÄÀÏµéÀ» manifest.json°ú °°Àº µð·ºÅÍ¸®¿¡ ÀúÀå
-		=> image´Â Æú´õ ÀÚÃ¼¸¦ °°Àº µð·ºÅÍ¸®¿¡ ÀúÀåÇÑ´Ù.
+  1. ë‹¤ìš´ë°›ì€ ì••ì¶•íŒŒì¼ì„ ê·¸ëŒ€ë¡œ í•˜ë‚˜ì˜ í´ë”ì— ì••ì¶• í•´ì œ
+	- main, page, piexif íŒŒì¼ì„ main.js, page.js, piexif.jsë¡œ í™•ìž¥ìž .js ì¶”ê°€í•˜ì—¬ ë³€ê²½
+	- ì••ì¶•í•´ì œ í•œ íŒŒì¼ë“¤ì„ manifest.jsonê³¼ ê°™ì€ ë””ë ‰í„°ë¦¬ì— ì €ìž¥
+		=> imageëŠ” í´ë” ìžì²´ë¥¼ ê°™ì€ ë””ë ‰í„°ë¦¬ì— ì €ìž¥í•œë‹¤.
 
-  2. chrome ºê¶ó¿ìÀú¿¡¼­ url¿¡ chrome://extensions ÀÔ·Â
-	- °³¹ßÀÚ ¸ðµå Ã¼Å©¹Ú½º Ã¼Å©
-	- ¾ÐÃàÇØÁ¦µÈ ÇÐÀå ÇÁ·Î±×·¥ ·Îµå ¼±ÅÃ
-	- »ç¿ëÀÚ PC¿¡¼­ menifest.jsonÀÌ ÀÖ´Â Æú´õ¸¦ ¼±ÅÃ ÈÄ È®ÀÎ
+  2. chrome ë¸Œë¼ìš°ì €ì—ì„œ urlì— chrome://extensions ìž…ë ¥
+	- ê°œë°œìž ëª¨ë“œ ì²´í¬ë°•ìŠ¤ ì²´í¬
+	- ì••ì¶•í•´ì œëœ í•™ìž¥ í”„ë¡œê·¸ëž¨ ë¡œë“œ ì„ íƒ
+	- ì‚¬ìš©ìž PCì—ì„œ menifest.jsonì´ ìžˆëŠ” í´ë”ë¥¼ ì„ íƒ í›„ í™•ì¸
 
-  3. ÁÖ¼Ò ÀÔ·Â Ã¢ ¿ìÃø¿¡ Èò ¹è°æ¿¡ ÆÄ¶õ»ö µ¿±×¶ó¹Ì ¹öÆ° Å¬¸¯ ÈÄ popupÃ¢¿¡ Á¤º¸ ÀÔ·Â ÇÏ¿© »ç¿ë.
-	=> »ç¿ë¹æ¹ý Ã·ºÎÇÑ ¿µ»ó ÆÄÀÏ ÂüÁ¶!!
+  3. ì£¼ì†Œ ìž…ë ¥ ì°½ ìš°ì¸¡ì— í° ë°°ê²½ì— íŒŒëž€ìƒ‰ ë™ê·¸ë¼ë¯¸ ë²„íŠ¼ í´ë¦­ í›„ popupì°½ì— ì •ë³´ ìž…ë ¥ í•˜ì—¬ ì‚¬ìš©.
+	=> ì‚¬ìš©ë°©ë²• ì²¨ë¶€í•œ ì˜ìƒ íŒŒì¼ ì°¸ì¡°!!
 
 
 
